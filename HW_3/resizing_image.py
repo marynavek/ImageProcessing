@@ -23,7 +23,7 @@ def reduce_plane(im_data, first_x, second_x, first_y, second_y, height, width):
 
     return average_px
 
-def rezie_image(image):
+def resize_image(image):
     original_image_shape = np.shape(image)
     
     if len(original_image_shape) < 3:
@@ -57,6 +57,7 @@ def rezie_image(image):
         return reduced_image* 255.0
 
     else:
+        original_image_data = image
         original_image_data = np.float32(original_image_data) / 255.0
         
         height, width, channels = np.shape(original_image_data)
