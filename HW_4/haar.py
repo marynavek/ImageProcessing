@@ -3,51 +3,7 @@ import numpy as np
 import math, cv2
 from matplotlib import pyplot as plt
 from timeit import default_timer as timer
-
-
-def walsh_transform(img):
-        
-        M, N = np.shape(img)
-       
-        walsh_results = np.zeros((M, N))
-
-        number_of_bits = int(math.log2(N)) 
-
-        time_start = timer()
-
-        for u in range(M-1):
-            for v in range(N-1):
-                u_bits = decimalToBinary(u)
-                v_bits = decimalToBinary(v)
-                u_final = fix_binary_to_lenght(u_bits, number_of_bits)
-                v_final = fix_binary_to_lenght(v_bits, number_of_bits)
-                sum = 0
-                for x in range(M-1):
-                    for y in range(N-1):
-                        f_x_y = img[x,y]
-                        x_bits = decimalToBinary(x)
-                        y_bits = decimalToBinary(y)
-                        x_final = fix_binary_to_lenght(x_bits, number_of_bits)
-                        y_final = fix_binary_to_lenght(y_bits, number_of_bits)
-
-                        temp_sum = 0
-                        product = 1
-                        for i in range(number_of_bits):
-                            # print(i)
-                            power = int(x_final[i])*int(u_final[number_of_bits-1-i]) + int(y_final[i])*int(v_final[number_of_bits-1-i])
-                            # print(f'x is {x_final[i]} and u is {u_final[n-i]}')
-                            product = product*((-1)**power)
-                        
-                        temp_sum = (1/N)*(f_x_y*product)
-                        sum += temp_sum
-                walsh_results[u,v] = sum
-
-        time_end = timer()
-        time_elapsed = time_end - time_start
-        print(f"Total execution time is: {time_elapsed}")
-        # print(dct_result)
-        plt.imshow(walsh_results, cmap='gray')
-        plt.show()
+import pywt
 
 def get_kernel(N):
 
@@ -71,8 +27,6 @@ def get_kernel(N):
         for m in range(min_m, max_m+1):
             rm_tuples.append((r,m))
     
-    # print(rm_tuples)
-    # print(len(rm_tuples))
     
     for u in range(N):
         r,m = rm_tuples[u-1]
@@ -91,11 +45,8 @@ def get_kernel(N):
                     haar_value = -(2**(r/2))/(math.sqrt(N))
                 else:
                     haar_value = 0
-            # print(haar_value)
             haar[u,v] = haar_value*(math.sqrt(N))
 
-    # plt.imshow(haar, cmap='gray')
-    # plt.show()   
     return haar   
         
 def fix_binary_to_lenght(binary, lenght):
@@ -123,8 +74,19 @@ def ordered_kernel(walsh_transform):
         # print(ordered_position)
         ordered_transform[ordered_position] = walsh_transform[original_position]
     
-    plt.imshow(ordered_transform, cmap='gray')
-    plt.show()
+    return ordered_transform
+
+def multiply_matrix(A,B):
+  global C
+  if  A.shape[1] == B.shape[0]:
+    C = np.zeros((A.shape[0],B.shape[1]),dtype = int)
+    for row in range(A.shape[0]): 
+        for col in range(B.shape[1]):
+            for elt in range(len(B)):
+              C[row, col] += A[row, elt] * B[elt, col]
+    return C
+  else:
+    return "Sorry, cannot multiply A and B."
 
 def decimalToBinary(n):
     # converting decimal to binary
@@ -135,27 +97,18 @@ if __name__ == "__main__":
 
     image_path = "/Users/marynavek/Projects/ImageProcessing/synthetic_im_3.jpg"
     
-    # image = Image.open(image_path).convert("L")
-    # img = Image.open(image_path).convert("L")
     image = cv2.imread(image_path, 0)
-    image = cv2.resize(image, (64,64))
+    image = cv2.resize(image, (32,32))
 
-    # print(type(decimalToBinary(7)))
-    # print(image.shape)
-    # image = np.zeros((16,16))
-
-    # for M in range(image.shape[0]):
-    #     for N in range(image.shape[1]):
-    #         print(M)
-            # image[M,N] = [M,N]
-
-    # dct_2d(image)
-    haar = get_kernel(64)
-    new_image = haar*image
-    plt.imshow(new_image)
+    plt.imshow(image, cmap='gray')
     plt.show()
-    # ordered_kernel(original_kernel)
-    # walsh_transform(image)
-    
+    haar = get_kernel(32)
+    new_image = multiply_matrix(haar,image)
+    plt.imshow(new_image, cmap='gray')
+    plt.show()
+    reverse = multiply_matrix(np.linalg.inv(haar),new_image)
+    plt.imshow(reverse, cmap='gray')
+    plt.show()
+
 
   

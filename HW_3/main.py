@@ -52,7 +52,7 @@ if __name__ == "__main__":
     image_1 = gray_image.resize((32,32))
     #get the pixels of image into array
     image_1 = np.asarray(image_1)
-    M, N = np.shape(image_1)
+    M, N = np.shape(f)
     P,Q = M*2-1,N*2-1
     shape = np.shape(image_1)
     #our padded array
