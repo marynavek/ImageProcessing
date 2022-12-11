@@ -102,13 +102,15 @@ if __name__ == "__main__":
 
     plt.imshow(image, cmap='gray')
     plt.show()
-    haar = get_kernel(32)
-    new_image = multiply_matrix(haar,image)
-    plt.imshow(new_image, cmap='gray')
+    haar = ordered_kernel(get_kernel(32))
+    plt.imshow(haar, cmap='gray')
     plt.show()
-    reverse = multiply_matrix(np.linalg.inv(haar),new_image)
-    plt.imshow(reverse, cmap='gray')
-    plt.show()
+    # new_image = multiply_matrix(haar,image)
+    # plt.imshow(new_image, cmap='gray')
+    # plt.show()
+    # reverse = multiply_matrix(np.linalg.inv(haar),new_image)
+    # plt.imshow(reverse, cmap='gray')
+    # plt.show()
 
 
   

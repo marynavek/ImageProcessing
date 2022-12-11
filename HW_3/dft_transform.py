@@ -19,7 +19,7 @@ if __name__ == "__main__":
     
     image = Image.open(image_path).convert("L")
 
-    image = image.resize((64,64))
+    image = image.resize((128,128))
     #get the pixels of image into array
     f = np.asarray(image)
     M, N = np.shape(f) # (img x, img y)
@@ -66,4 +66,5 @@ if __name__ == "__main__":
     print(f"Total execution time is: {time_elapsed}")
     plt.imshow(dft2d.real, cmap='gray')
     plt.show()
+    cv2.imwrite("dft.jpg", dft2d.real)
     

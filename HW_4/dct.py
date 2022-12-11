@@ -111,18 +111,19 @@ if __name__ == "__main__":
     image_path = "/Users/marynavek/Projects/ImageProcessing/synthetic_im_3.jpg"
     
     image = cv2.imread(image_path, 0)
-    image = cv2.resize(image, (16,16))
+    image = cv2.resize(image, (128,128))
 
     plt.imshow(image, cmap='gray')
     plt.show()
+    # kernel = get_kernel(128)
     transform = dct_2d(image)
-    # get_kernel(64)
+ 
     plt.imshow(transform, cmap='gray')
     plt.show()
-    kernel = inverse_dct_2d(transform)
-    # transform = dct_2d(image)
-    plt.imshow(kernel, cmap='gray')
-    plt.show()
+    # kernel = inverse_dct_2d(transform)
+    # # transform = dct_2d(image)
+    # plt.imshow(kernel, cmap='gray')
+    # plt.show()
 
     
 

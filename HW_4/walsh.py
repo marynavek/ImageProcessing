@@ -164,15 +164,12 @@ def ordered_kernel(walsh_transform):
     ordered_transform = np.zeros((walsh_transform.shape))
 
     for original_position, ordered_position in enumerate(skips_number):
-        # print(original_position)
-        # print(ordered_position)
+        
         ordered_transform[ordered_position] = walsh_transform[original_position]
     
     return ordered_transform
 
 def decimalToBinary(n):
-    # converting decimal to binary
-    # and removing the prefix(0b)
     return bin(n).replace("0b", "")
 
 def multiply_matrix(A,B):
@@ -198,17 +195,18 @@ if __name__ == "__main__":
 
 
     transform1 = walsh_transform(image)
-    plt.imshow(transform1, cmap='gray')
-    plt.show()
-    plt.imshow(image, cmap='gray')
-    plt.show()
-    # original_kernel = get_kernel(32)
-    # new_transform = multiply_matrix(original_kernel, image)
-    # plt.imshow(new_transform, cmap='gray')
+    # plt.imshow(transform1, cmap='gray')
     # plt.show()
-    reverse = inverse_walsh_transform(transform1)
-    # multiply_matrix(np.linalg.inv(original_kernel), new_transform)
-    plt.imshow(reverse, cmap='gray')
+    # plt.imshow(image, cmap='gray')
+    # plt.show()
+    original_kernel = get_kernel(32)
+    ordered = ordered_kernel(original_kernel)
+    # new_transform = multiply_matrix(original_kernel, image)
+    plt.imshow(ordered, cmap='gray')
     plt.show()
+    # reverse = inverse_walsh_transform(transform1)
+    # # multiply_matrix(np.linalg.inv(original_kernel), new_transform)
+    # plt.imshow(reverse, cmap='gray')
+    # plt.show()
 
   
