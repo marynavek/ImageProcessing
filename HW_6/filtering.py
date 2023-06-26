@@ -1,3 +1,4 @@
+from ideal_filter import IdealFilter
 from butterworth_filter import ButterworthFilter
 from PIL import Image
 import numpy as np
@@ -6,15 +7,14 @@ from matplotlib import pyplot as plt
 
 if __name__ == "__main__":
 
-    image_path = "/Users/marynavek/Projects/ImageProcessing/shape_circle.png"
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natual_im_1.jpg"
     
     image = cv2.imread(image_path, 0)
-    image = cv2.resize(image, (32,32))
     plt.imshow(image, cmap='gray')
     plt.show()
     imgTrans = np.fft.fftshift(np.fft.fft2(image))
     filter = ButterworthFilter()
-    imgLowPass = filter.FPLP(10,image.shape, 20)
+    imgLowPass = filter.FPLP(1.5,image.shape)
     imgProcessLP = imgTrans*imgLowPass
 
     plt.imshow(imgLowPass, cmap='gray')
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     plt.imshow(inversaLP, cmap='gray')
     plt.show()
 
-    imgHighPass = filter.FPHP(50,image.shape, 20)
+    imgHighPass = filter.FPHP(10,image.shape, 20)
     imgProcessHighPass = imgTrans*imgHighPass
     inversaHighPass= np.fft.ifftshift(imgProcessHighPass) 
     inversaHighPass = np.fft.ifft2(inversaHighPass)  

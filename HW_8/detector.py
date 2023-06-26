@@ -8,11 +8,7 @@ from matplotlib import pyplot as plt
 
 from numpy import ndarray
 
-from detector import borderDetector
-
-
-
-class borderDetector1:
+class borderDetector:
 
     def __init__(self, imgPath: string, sigmas: ndarray) -> None:
         """
@@ -162,10 +158,3 @@ class borderDetector1:
 
         # Return the convolved image
         return result[large:-large, large:-large]
-
-if __name__ == '__main__':
-
-    # bd = borderDetector(imgPath="car.bmp", sigmas=np.array([0.73, 0.84]))
-    # bd.detect()
-    bd = borderDetector1(imgPath="/Users/marynavek/Projects/ImageProcessing/lady_face.png", sigmas=np.array([2, 4, 8]))
-    bd.detect()

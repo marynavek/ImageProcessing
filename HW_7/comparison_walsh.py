@@ -1,9 +1,12 @@
-from PIL import Image
 import numpy as np
-import math, cv2
+import cv2, math
 from matplotlib import pyplot as plt
 from timeit import default_timer as timer
 
+def mse_between_two_images(original_image, reconstructed_image):
+    differences = np.subtract(original_image, reconstructed_image)
+    squared_differences = np.square(differences)
+    return squared_differences.mean()
 
 def walsh_transform(img):
         
@@ -120,19 +123,25 @@ def fix_binary_to_lenght(binary, lenght):
 def decimalToBinary(n):
     return bin(n).replace("0b", "")
 
+
 if __name__ == "__main__":
 
-    image_path = "/Users/marynavek/Projects/ImageProcessing/shape_circle.png"
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natural_scene.png"
 
     image = cv2.imread(image_path, 0)
-    image = cv2.resize(image, (32,32))
-    
+    image = cv2.resize(image, (64,64))
     plt.imshow(image, cmap='gray')
     plt.show()
-    original_kernel = get_kernel(32)
-    plt.imshow(original_kernel, cmap='gray')
+
+    walsh = walsh_transform(image)
+    plt.imshow(walsh, cmap='gray')
     plt.show()
-    transform = walsh_transform(image)
-    plt.imshow(transform, cmap='gray')
+
+    reverse = inverse_walsh_transform(walsh)
+    plt.imshow(reverse, cmap='gray')
     plt.show()
-  
+
+    mse = mse_between_two_images(image,reverse)
+    print(f"MSE Walsh: {mse}")
+
+    

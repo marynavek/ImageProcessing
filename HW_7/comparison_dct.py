@@ -1,9 +1,12 @@
-from PIL import Image
 import numpy as np
-import math, cv2
+import cv2, math
 from matplotlib import pyplot as plt
 from timeit import default_timer as timer
 
+def mse_between_two_images(original_image, reconstructed_image):
+    differences = np.subtract(original_image, reconstructed_image)
+    squared_differences = np.square(differences)
+    return squared_differences.mean()
 
 def dct_2d(img):
         M, N = np.shape(img)
@@ -46,9 +49,11 @@ def inverse_dct_2d(transformed):
 
         pi = math.pi
         time_start = timer()
+        
 
         for x in range(M-1):
             for y in range(N-1):
+                sum = 0
                 for u in range(M-1):
                     for v in range(N-1):
                         if u == 0:
@@ -60,7 +65,7 @@ def inverse_dct_2d(transformed):
                         else:
                             alpha_v = math.sqrt(2/M)
 
-                        sum = 0
+                        
                 
                         cos_x = math.cos((2*x+1)*u*pi/(2*M))
                         cos_y = math.cos((2*y+1)*v*pi/(2*N))
@@ -69,7 +74,7 @@ def inverse_dct_2d(transformed):
 
                         sum += temp_sum 
 
-                dct_result_inverse[x,y] =  sum
+                dct_result_inverse[x,y] = 1/4 *sum
 
         time_end = timer()
         time_elapsed = time_end - time_start
@@ -90,22 +95,23 @@ def get_kernel(N):
 
 if __name__ == "__main__":
 
-    image_path = "/Users/marynavek/Projects/ImageProcessing/shape_circle.png"
-    
-    image = cv2.imread(image_path, 0)
-    image = cv2.resize(image, (32,32))
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natural_scene.png"
 
+    image = cv2.imread(image_path, 0)
+    image = cv2.resize(image, (64,64))
     plt.imshow(image, cmap='gray')
     plt.show()
-    kernel = get_kernel(32)
-    plt.imshow(kernel, cmap='gray')
-    plt.show()
-    transform = dct_2d(image)
- 
-    plt.imshow(transform, cmap='gray')
+    
+    haar = get_kernel(32)
+    haar_t = dct_2d(image)
+    plt.imshow(haar_t, cmap='gray')
     plt.show()
 
+    reverse = inverse_dct_2d(haar_t)
+    plt.imshow(reverse, cmap='gray')
+    plt.show()
+
+    mse = mse_between_two_images(image,reverse)
+    print(f"MSE DCT: {mse}")
 
     
-
-  

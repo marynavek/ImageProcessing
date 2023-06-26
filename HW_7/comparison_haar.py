@@ -1,8 +1,12 @@
-from PIL import Image
 import numpy as np
-import math, cv2
+import cv2, math
 from matplotlib import pyplot as plt
 from timeit import default_timer as timer
+
+def mse_between_two_images(original_image, reconstructed_image):
+    differences = np.subtract(original_image, reconstructed_image)
+    squared_differences = np.square(differences)
+    return squared_differences.mean()
 
 def get_kernel(N):
     haar = np.zeros((N, N))
@@ -81,24 +85,26 @@ def multiply_matrix(A,B):
 def decimalToBinary(n):
     return bin(n).replace("0b", "")
 
+
 if __name__ == "__main__":
 
-    image_path = "/Users/marynavek/Projects/ImageProcessing/shape_circle.png"
-    
-    image = cv2.imread(image_path, 0)
-    image = cv2.resize(image, (32,32))
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natural_scene.png"
 
+    image = cv2.imread(image_path, 0)
+    image = cv2.resize(image, (64,64))
     plt.imshow(image, cmap='gray')
     plt.show()
-    haar = get_kernel(32)
-    plt.imshow(haar, cmap='gray')
+
+    haar = get_kernel(64)
+    haar_t = multiply_matrix(haar,image)
+    plt.imshow(haar_t, cmap='gray')
     plt.show()
-    new_image = multiply_matrix(haar,image)
-    plt.imshow(new_image, cmap='gray')
-    plt.show()
-    reverse = multiply_matrix(np.linalg.inv(haar),new_image)
+
+    reverse = multiply_matrix(np.linalg.inv(haar),haar_t)
     plt.imshow(reverse, cmap='gray')
     plt.show()
 
+    mse = mse_between_two_images(image,reverse)
+    print(f"MSE Haar: {mse}")
 
-  
+    

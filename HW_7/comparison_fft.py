@@ -1,9 +1,12 @@
-from PIL import Image
 import numpy as np
-import math, cv2
+import cv2, math
 from matplotlib import pyplot as plt
 from timeit import default_timer as timer
 
+def mse_between_two_images(original_image, reconstructed_image):
+    differences = np.subtract(original_image, reconstructed_image)
+    squared_differences = np.square(differences)
+    return squared_differences.mean()
 
 def compute_single_2d_FFT(image, u, v, N):
         result = 0 + 0j
@@ -112,31 +115,28 @@ def inverse_fft(imgeFFT):
         N = imgeFFT.shape[0]
         return np.real(np.conjugate(fft(np.conjugate(imgeFFT)*(N**2)))*(N**2))
 
+
 if __name__ == "__main__":
 
-        image_path = "/Users/marynavek/Projects/ImageProcessing/shape_circle.png"
-        
-        image = cv2.imread(image_path, 0)
-        image = cv2.resize(image, (256,256))
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natural_scene.png"
 
-        
-        plt.imshow(image, cmap='gray')
-        plt.show()
-        centeredImge = compute_centered_image(image)
-        time_start = timer()
-        fft_im = fft(centeredImge)
-        time_end = timer()
-        time_elapsed = time_end - time_start
-        print(f"Total execution time is: {time_elapsed}")
-        fftCenteredNormImge = normalize_by_log(fft_im)
-        plt.imshow(fftCenteredNormImge, cmap='gray')
-        plt.show()
+    image = cv2.imread(image_path, 0)
+    image = cv2.resize(image, (64,64))
+    plt.imshow(image, cmap='gray')
+    plt.show()
+
+    centeredImge = compute_centered_image(image)
+    fft_im = fft(centeredImge)
+    fftCenteredNormImge = normalize_by_log(fft_im)
+    plt.imshow(fftCenteredNormImge, cmap='gray')
+    plt.show()
+
+    inverse = inverse_fft(fft_im)
+    inv_centered = compute_centered_image(inverse)
+    plt.imshow(inv_centered, cmap='gray')
+    plt.show()
+
+    mse = mse_between_two_images(image,inv_centered)
+    print(f"MSE FFT: {mse}")
 
     
-#     inverse = inverse_fft(fft)
-#     inv_centered = compute_centered_image(inverse)
-#     plt.imshow(inv_centered, cmap='gray')
-#     plt.show()
-    
-
-  

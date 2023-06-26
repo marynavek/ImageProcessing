@@ -1,49 +1,33 @@
 from matplotlib import pyplot as plt
 import numpy as np
-import cv2, argparse
+import cv2
 import cmath
-from PIL import Image, ImageDraw
-
-from resizing_image import resize_image
+from PIL import Image
 from timeit import default_timer as timer
 
-# parser = argparse.ArgumentParser(
-#     description='Make predictions with signature network',
-#     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
 if __name__ == "__main__":
-    
-    # args = parser.parse_args()
-    # image_path = args.image_path
-    image_path = "/Users/marynavek/Projects/ImageProcessing/synthetic_im_3.jpg"
+
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natual_im_1.jpg"
     
     image = Image.open(image_path).convert("L")
 
-    image = image.resize((128,128))
-    #get the pixels of image into array
+    image = image.resize((64,64))
+    plt.imshow(image, cmap='gray')
+    plt.show()
     f = np.asarray(image)
-    M, N = np.shape(f) # (img x, img y)
-    #show image
-    # plt.imshow(f, cmap='gray')
-    # plt.show()
+    M, N = np.shape(f) 
 
-    #padd image with size of P and Q
     P,Q = M*2-1,N*2-1
     shape = np.shape(f)
-    #our padded array
+
     fp = np.zeros((P, Q))
-    #import our image into padded array
+
     fp[:shape[0],:shape[1]] = f
-    # plt.imshow(fp, cmap='gray',vmin=0, vmax=255)
-    # plt.show()
 
     fpc = np.zeros((P, Q))
     for x in range(P):
         for y in range(Q):
             fpc[x,y]=fp[x,y]*np.power(-1,x+y)
-
-    # plt.imshow(fpc, cmap='gray',vmin=0, vmax=255)
-    # plt.show()
 
 
     def DFT2D(padded):

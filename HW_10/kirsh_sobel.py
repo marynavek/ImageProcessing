@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def kirsch_filter(image, threshold):
     x,y = image.shape
     list=[]
@@ -56,9 +55,9 @@ def sobel_filter(image, threshold):
 
     for i in range(x - 2):
         for j in range(y - 2):
-            gx = np.sum(np.multiply(Gx, image[i:i + 3, j:j + 3]))  # x direction
-            gy = np.sum(np.multiply(Gy, image[i:i + 3, j:j + 3]))  # y direction
-            sobel[i + 1, j + 1] = np.sqrt(gx ** 2 + gy ** 2)  # calculate the "hypotenuse"
+            gx = np.sum(np.multiply(Gx, image[i:i + 3, j:j + 3])) 
+            gy = np.sum(np.multiply(Gy, image[i:i + 3, j:j + 3])) 
+            sobel[i + 1, j + 1] = np.sqrt(gx ** 2 + gy ** 2) 
     
     for i in range(x):
         for j in range(y):
@@ -71,10 +70,28 @@ def sobel_filter(image, threshold):
 
 if __name__ == "__main__":
 
-    image_path = "/Users/marynavek/Projects/ImageProcessing/synthetic_im_3.jpg"
+    image_path = "/Users/marynavek/Projects/ImageProcessing/natural_scene.png"
     
     image = cv2.imread(image_path, 0)
+    plt.imshow(image, cmap='gray')
+    plt.show()
    
-    transform = sobel_filter(image, 0.2)
+    transform = kirsch_filter(image, 0.2)
+    plt.imshow(transform, cmap='gray')
+    plt.show()
+
+    transform = sobel_filter(image, 0.4)
+    plt.imshow(transform, cmap='gray')
+    plt.show()
+
+    transform = kirsch_filter(image, 0.5)
+    plt.imshow(transform, cmap='gray')
+    plt.show()
+
+    transform = sobel_filter(image, 0.8)
+    plt.imshow(transform, cmap='gray')
+    plt.show()
+
+    transform = kirsch_filter(image, 0.8)
     plt.imshow(transform, cmap='gray')
     plt.show()
